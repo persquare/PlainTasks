@@ -1,0 +1,30 @@
+<snippet>
+	<content><![CDATA[
+Project ${1:<name>}
+
+Primary purpose:
+  Why should this be done in the first place?
+  ☐ ${2:Frobinators lacks documentation}
+
+Standards:
+  What defines 'done'? Give this some thought!
+  ☐ ${3:Clearly written}
+
+Outcome vision:
+  Specify your vision of a successful outcome.
+  ☐ ${4:A good tutorial on frobinators}
+
+Support:
+  Mind dump, quantity over quality. 
+  Extract actions from this list.
+  ☐ ${5:Read up on frobinators}
+
+Actions:
+  ☐ ${6:Complete this form}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>project</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.todo</scope>
+</snippet>
