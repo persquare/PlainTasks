@@ -6,6 +6,8 @@ import sublime
 import sublime_plugin
 import webbrowser
 from datetime import datetime
+import os
+import subprocess
 
 
 class PlainTasksBase(sublime_plugin.TextCommand):
@@ -221,3 +223,30 @@ class PlainTasksOpenUrlCommand(sublime_plugin.TextCommand):
             webbrowser.open_new_tab(strUrl)
         else:
             sublime.status_message("Looks like there is nothing to open")
+
+class PlainTasksListAllTodosCommand(sublime_plugin.TextCommand):
+    # Only list files the starts with "Project ..."
+    # Use first line of todo file as menu text
+
+    def run(self, edit):
+        self.find_all_todos()
+        window = sublime.active_window()
+        window.show_quick_panel(self.items, self.selection)
+
+    def selection(self, item_index):
+        if item_index < 0:
+            return
+        window = sublime.active_window()
+        window.open_file(self.paths[item_index])
+
+    def find_all_todos(self):
+        s = subprocess.check_output(["find", os.path.expanduser('~'), "-type", "f",  "-iregex", ".*todo"])
+        candidates = str(s, encoding="utf8").rstrip('\n').split('\n')
+        self.items = []
+        self.paths = []
+        for path in candidates:
+            with open(path, 'r', encoding="utf8") as f:
+                first_line = f.readline().rstrip('\n')
+                if re.match("Project", first_line):
+                    self.items.append("%s  (%s)" % (first_line, path))
+                    self.paths.append(path)
