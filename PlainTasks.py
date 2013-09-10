@@ -186,7 +186,7 @@ class PlainTasksNewTaskDocCommand(sublime_plugin.WindowCommand):
 
 class PlainTasksOpenUrlCommand(sublime_plugin.TextCommand):
     #It is horrible regex but it works perfectly
-    URL_REGEX = r"""(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))
+    URL_REGEX = r"""(?i)\b((?:file://|https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))
         +(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))"""
 
     def run(self, edit):
@@ -220,9 +220,15 @@ class PlainTasksOpenUrlCommand(sublime_plugin.TextCommand):
             strUrl = exp.group(0)
             if strUrl.find("://") == -1:
                 strUrl = "http://" + strUrl
-            webbrowser.open_new_tab(strUrl)
+            if re.match("http", strUrl):
+                webbrowser.open_new_tab(strUrl)
+            else:
+                strUrl = strUrl[7:]
+                window = sublime.active_window()
+                window.open_file(strUrl)
         else:
             sublime.status_message("Looks like there is nothing to open")
+
 
 class PlainTasksListAllTodosCommand(sublime_plugin.TextCommand):
     # Only list files the starts with "Project ..."
